@@ -3,10 +3,10 @@
 
 typedef struct train
 {
-    unsigned int number;
-    char source[20];
-    char destination[20];
-    int cost;
+    char number[6];
+    char source[30];
+    char destination[30];
+    unsigned int cost;
     unsigned short int seatsLeft;
 } TRAIN;
 
@@ -19,18 +19,17 @@ typedef struct ticket
 
 TRAIN trains[100];
 //TODO change later
-TICKET tickets[10000];
+TICKET tickets[100];
 int trainCount = 0;
 int ticketCount = 0;
 
-void welcome();
 void loadData();
+void welcome();
 void showTrains();
 
 int main()
 {
     // system("clear");
-    printf("Start Loading");
     loadData();
     welcome();
     // system("clear");
@@ -39,19 +38,28 @@ int main()
 
 void loadData()
 {
-    FILE *trainPtr = fopen("trains.txt", "r");
+    FILE *trainPtr = fopen("trains.txt", "r+");
     char c;
     while (!feof(trainPtr))
     {
         TRAIN tr;
-        fscanf(trainPtr, "%u", &tr.number);
-        printf("%u", tr.number);
-        fgetc(trainPtr);
-        if (feof(trainPtr))
+        char temp[3];
+        for (int i = 0; i < 10; i++)
         {
-            break;
+            c = fgetc(trainPtr);
+            if (c == EOF)
+            {
+                fclose(trainPtr);
+                return;
+            }
+            if (c == ',')
+            {
+                tr.number[i] = '\0';
+                break;
+            }
+            tr.number[i] = c;
         }
-        for (int i = 0; i < 19; i++)
+        for (int i = 0; i < 29; i++)
         {
             c = fgetc(trainPtr);
             if (c == ',')
@@ -61,7 +69,7 @@ void loadData()
             }
             tr.source[i] = c;
         }
-        for (int i = 0; i < 19; i++)
+        for (int i = 0; i < 29; i++)
         {
             c = fgetc(trainPtr);
             if (c == ',')
@@ -71,13 +79,12 @@ void loadData()
             }
             tr.destination[i] = c;
         }
-        fscanf(trainPtr, "%d", &tr.cost);
+        fscanf(trainPtr, "%u", &tr.cost);
         fgetc(trainPtr);
         fscanf(trainPtr, "%hu", &tr.seatsLeft);
         trains[trainCount] = tr;
         trainCount++;
-        while (fgetc(trainPtr) != '\n')
-            ;
+        fgets(temp, 3, trainPtr);
     }
     //TODO Load ticket data
     fclose(trainPtr);
@@ -90,7 +97,7 @@ void showTrains()
     for (int i = 0; i < trainCount; i++)
     {
         TRAIN tr = trains[i];
-        printf("%d.\t%05u%*s%-8s%-20s%-12hu\n", i+1, tr.number, 7, "", tr.source, tr.destination, tr.seatsLeft);
+        printf("%d.\t%5s%*s%-8s%-20s%-12hu\n", i + 1, tr.number, 7, "", tr.source, tr.destination, tr.seatsLeft);
     }
 }
 
