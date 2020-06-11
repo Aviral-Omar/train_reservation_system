@@ -1,0 +1,32 @@
+02392,Delhi,Rajgir,330,1000
+02394,Delhi,Rajendra Nagar,310,1000
+02418,Delhi,Prayagraj,355,1000
+02420,Delhi,Lucknow,180,1000
+02452,Delhi,Kanpur,180,1000
+02560,Delhi,Manduadih,255,1000
+02629,Delhi,Yesvantpur,560,1000
+02724,Delhi,Hyderabad,390,1000
+02916,Delhi,Ahmedabad,490,1000
+05484,Delhi,Alipurduar,375,1000
+02392,Delhi,Varanasi,330,1000
+02055,Delhi,Dehradun,165,1000
+02057,Delhi,Una Himachal,195,1000
+02302,Delhi,Howrah,2620,1000
+02952,Delhi,Mumbai,1855,1000
+02958,Delhi,Ahmedabad,1735,1000
+02692,Delhi,Bengaluru,2510,1000
+02424,Delhi,Dibrugarh,2265,1000
+02442,Delhi,Bilaspur,2695,1000
+02824,Delhi,Bhubaneswar,2700,1000
+02425,Delhi,Jammu,1485,1000
+02434,Delhi,Chennai,2430,1000
+02454,Delhi,Ranchi,2395,1000
+02414,Delhi,Madgaon,3325,1000
+02438,Delhi,Secunderabad,2855,1000
+02432,Delhi,Thiruvananthapuram,2930,1000
+02502,Delhi,Agartala,2805,1000
+02463,Delhi,Jodhpur,225,1000
+02806,Delhi,Vishakapatnam,810,1000
+02554,Delhi,Saharsa,355,1000
+02066,Delhi,Ajmer,180,1000
+02566,Delhi,Darbhanga,335,1000
