@@ -33,6 +33,7 @@ int main()
     // system("clear");
     loadData();
     welcome();
+    saveData();
     // system("clear");
     return 0;
 }
@@ -50,6 +51,7 @@ void saveData()
         }
     }
     fclose(trainPtr);
+    //TODO save ticket data
 }
 
 void loadData()
@@ -106,6 +108,7 @@ void loadData()
     fclose(trainPtr);
 }
 
+//Not to be used in program
 void showTrains()
 {
     printf("\nAvailable Trains:\n\n");
