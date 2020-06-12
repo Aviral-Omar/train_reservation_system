@@ -23,8 +23,9 @@ TICKET tickets[100];
 int trainCount = 0;
 int ticketCount = 0;
 
-void loadData();
 void welcome();
+void loadData();
+void saveData();
 void showTrains();
 
 int main()
@@ -36,9 +37,24 @@ int main()
     return 0;
 }
 
+void saveData()
+{
+    FILE *trainPtr = fopen("trains.txt", "w");
+    for (int i = 0; i < trainCount; i++)
+    {
+        TRAIN tr = trains[i];
+        fprintf(trainPtr, "%s,%s,%s,%u,%hu", tr.number, tr.source, tr.destination, tr.cost, tr.seatsLeft);
+        if (i != trainCount - 1)
+        {
+            fprintf(trainPtr, "\n");
+        }
+    }
+    fclose(trainPtr);
+}
+
 void loadData()
 {
-    FILE *trainPtr = fopen("trains.txt", "r+");
+    FILE *trainPtr = fopen("trains.txt", "r");
     char c;
     while (!feof(trainPtr))
     {
