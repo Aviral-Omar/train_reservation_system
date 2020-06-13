@@ -125,20 +125,27 @@ void booking()
         dt[strlen(dt) - 1] = '\0';
         for (int i = 0; i < trainCount; i++)
         {
-            if (strcmp(dt, trains[i].destination) == 0)
+            if (!strcmp(dt, trains[i].destination))
             {
-                trains[i].seatsLeft--;
-                TICKET tc;
-                tc.pnr = nextPNR;
-                nextPNR++;
-                strcpy(tc.name, name);
-                strcpy(tc.number, trains[i].number);
-                tickets[ticketCount] = tc;
-                ticketCount++;
-                printf("\nYou successfully booked a seat in train number %s.\n", tc.number);
-                printf("Your PNR number is %lu.\n", tc.pnr);
-                printf("You have been charged Rs.%u.", trains[i].cost);
-                break;
+                if (trains[i].seatsLeft > 0)
+                {
+                    trains[i].seatsLeft--;
+                    TICKET tc;
+                    tc.pnr = nextPNR;
+                    nextPNR++;
+                    strcpy(tc.name, name);
+                    strcpy(tc.number, trains[i].number);
+                    tickets[ticketCount] = tc;
+                    ticketCount++;
+                    printf("\nYou successfully booked a seat in train number %s.\n", tc.number);
+                    printf("Your PNR number is %lu.\n", tc.pnr);
+                    printf("You have been charged Rs.%u.", trains[i].cost);
+                    break;
+                }
+                else
+                {
+                    printf("\n\nNo seats are left in this train!");
+                }
             }
             else if (i == trainCount - 1)
             {
