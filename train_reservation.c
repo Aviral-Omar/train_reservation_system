@@ -1,3 +1,4 @@
+//TODO Document properly
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -15,18 +16,18 @@ typedef struct ticket
 {
     unsigned long int pnr;
     char name[50];
-    unsigned int number;
-    unsigned int cost;
+    char number[6];
 } TICKET;
 
 TRAIN trains[100];
-//TODO change later
-TICKET tickets[100];
+TICKET tickets[32000];
 int trainCount = 0;
 int ticketCount = 0;
+int nextPNR = 1;
 
 void welcome();
 void enquiry();
+void booking();
 void loadData();
 void saveData();
 void showTrains();
@@ -64,6 +65,11 @@ void welcome()
         system("clear");
         enquiry();
     }
+    else if (choice == '2')
+    {
+        system("clear");
+        booking();
+    }
     system("clear");
     welcome();
 }
@@ -72,63 +78,95 @@ void enquiry()
 {
     char sr[30];
     printf("Enter Source: ");
-    fgets(sr, 28, stdin);
+    fgets(sr, 30, stdin);
     sr[strlen(sr) - 1] = '\0';
     if (strcmp(sr, "Delhi") == 0)
     {
         char dt[30];
         printf("Enter Destination: ");
-        fgets(dt, 28, stdin);
+        fgets(dt, 30, stdin);
         dt[strlen(dt) - 1] = '\0';
         for (int i = 0; i < trainCount; i++)
         {
             if (strcmp(dt, trains[i].destination) == 0)
             {
-                printf("\n\nNumber of seats available: %hu\n\n", trains[i].seatsLeft);
-                printf("Press ENTER to continue...");
-                while (fgetc(stdin) != '\n')
-                    ;
-                return;
+                printf("\n\nNumber of seats available: %hu", trains[i].seatsLeft);
+                break;
+            }
+            else if (i == trainCount - 1)
+            {
+                printf("\n\nNo trains are available for given source and destination!");
             }
         }
     }
-    printf("\n\nNo trains are available for given source and destination!\n\n");
-    printf("Press ENTER to continue...");
+    else
+    {
+        printf("\n\nNo trains are available for given source and destination!");
+    }
+    printf("\n\nPress ENTER to continue...");
     while (fgetc(stdin) != '\n')
         ;
 }
 
-void saveData()
+void booking()
 {
-    FILE *trainPtr = fopen("trains.txt", "w");
-    for (int i = 0; i < trainCount; i++)
+    char name[50], sr[30];
+    printf("Enter your Name: ");
+    fgets(name, 50, stdin);
+    name[strlen(name) - 1] = '\0';
+    printf("\nEnter Source: ");
+    fgets(sr, 50, stdin);
+    sr[strlen(sr) - 1] = '\0';
+    if (strcmp(sr, "Delhi") == 0)
     {
-        TRAIN tr = trains[i];
-        fprintf(trainPtr, "%s,%s,%s,%u,%hu", tr.number, tr.source, tr.destination, tr.cost, tr.seatsLeft);
-        if (i != trainCount - 1)
+        char dt[30];
+        printf("\nEnter Destination: ");
+        fgets(dt, 50, stdin);
+        dt[strlen(dt) - 1] = '\0';
+        for (int i = 0; i < trainCount; i++)
         {
-            fprintf(trainPtr, "\n");
+            if (strcmp(dt, trains[i].destination) == 0)
+            {
+                trains[i].seatsLeft--;
+                TICKET tc;
+                tc.pnr = nextPNR;
+                nextPNR++;
+                strcpy(tc.name, name);
+                strcpy(tc.number, trains[i].number);
+                tickets[ticketCount] = tc;
+                ticketCount++;
+                printf("\nYou successfully booked a seat in train number %s.\n", tc.number);
+                printf("Your PNR number is %lu.\n", tc.pnr);
+                printf("You have been charged Rs.%u.", trains[i].cost);
+                break;
+            }
+            else if (i == trainCount - 1)
+            {
+                printf("\n\nNo trains are available for given source and destination!");
+            }
         }
     }
-    fclose(trainPtr);
-    //TODO save ticket data
+    else
+    {
+        printf("\n\nNo trains are available for given source and destination!");
+    }
+    printf("\n\nPress ENTER to continue...");
+    while (fgetc(stdin) != '\n')
+        ;
 }
 
 void loadData()
 {
     FILE *trainPtr = fopen("trains.txt", "r");
-    char c;
-    while (!feof(trainPtr))
+    char c = fgetc(trainPtr);
+    while (c != EOF)
     {
         TRAIN tr;
-        char temp[3];
         for (int i = 0; i < 10; i++)
         {
-            c = fgetc(trainPtr);
-            if (c == EOF)
+            if (trainCount != 0)
             {
-                fclose(trainPtr);
-                return;
+                c = fgetc(trainPtr);
             }
             if (c == ',')
             {
@@ -136,6 +174,10 @@ void loadData()
                 break;
             }
             tr.number[i] = c;
+            if (trainCount == 0)
+            {
+                c = fgetc(trainPtr);
+            }
         }
         for (int i = 0; i < 29; i++)
         {
@@ -162,10 +204,77 @@ void loadData()
         fscanf(trainPtr, "%hu", &tr.seatsLeft);
         trains[trainCount] = tr;
         trainCount++;
-        fgets(temp, 3, trainPtr);
+        c = fgetc(trainPtr);
     }
-    //TODO Load ticket data
     fclose(trainPtr);
+    FILE *ticketPtr = fopen("tickets.txt", "r");
+    char d = fgetc(ticketPtr);
+    while (d != EOF)
+    {
+        TICKET tc;
+        for (int i = 0; i < 50; i++)
+        {
+            if (ticketCount != 0)
+            {
+                d = fgetc(ticketPtr);
+            }
+            if (d == ',')
+            {
+                tc.name[i] = '\0';
+                break;
+            }
+            tc.name[i] = d;
+            if (ticketCount == 0)
+            {
+                d = fgetc(ticketPtr);
+            }
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            d = fgetc(ticketPtr);
+            if (d == ',')
+            {
+                tc.number[i] = '\0';
+                break;
+            }
+            tc.number[i] = d;
+        }
+        fscanf(ticketPtr, "%lu", &tc.pnr);
+        tickets[ticketCount] = tc;
+        ticketCount++;
+        d = fgetc(ticketPtr);
+    }
+    if (ticketCount != 0)
+    {
+        nextPNR = tickets[ticketCount - 1].pnr + 1;
+    }
+    fclose(ticketPtr);
+}
+
+void saveData()
+{
+    FILE *trainPtr = fopen("trains.txt", "w");
+    for (int i = 0; i < trainCount; i++)
+    {
+        TRAIN tr = trains[i];
+        fprintf(trainPtr, "%s,%s,%s,%u,%hu", tr.number, tr.source, tr.destination, tr.cost, tr.seatsLeft);
+        if (i != trainCount - 1)
+        {
+            fprintf(trainPtr, "\n");
+        }
+    }
+    fclose(trainPtr);
+    FILE *ticketPtr = fopen("tickets.txt", "w");
+    for (int i = 0; i < ticketCount; i++)
+    {
+        TICKET tc = tickets[i];
+        fprintf(ticketPtr, "%s,%s,%lu", tc.name, tc.number, tc.pnr);
+        if (i != ticketCount - 1)
+        {
+            fprintf(ticketPtr, "\n");
+        }
+    }
+    fclose(ticketPtr);
 }
 
 //Not to be used in program
@@ -178,4 +287,6 @@ void showTrains()
         TRAIN tr = trains[i];
         printf("%d.\t%5s%*s%-8s%-20s%-12hu\n", i + 1, tr.number, 7, "", tr.source, tr.destination, tr.seatsLeft);
     }
+    while (fgetc(stdin) != '\n')
+        ;
 }
