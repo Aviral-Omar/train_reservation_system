@@ -28,6 +28,7 @@ int nextPNR = 1;
 void welcome();
 void enquiry();
 void booking();
+void cancel();
 void loadData();
 void saveData();
 void showTrains();
@@ -37,7 +38,6 @@ int main()
     system("clear");
     loadData();
     welcome();
-    saveData();
     system("clear");
     return 0;
 }
@@ -69,6 +69,11 @@ void welcome()
     {
         system("clear");
         booking();
+    }
+    else if (choice == '3')
+    {
+        system("clear");
+        cancel();
     }
     system("clear");
     welcome();
@@ -140,6 +145,7 @@ void booking()
                     printf("\nYou successfully booked a seat in train number %s.\n", tc.number);
                     printf("Your PNR number is %lu.\n", tc.pnr);
                     printf("You have been charged Rs.%u.", trains[i].cost);
+                    saveData();
                     break;
                 }
                 else
@@ -162,8 +168,50 @@ void booking()
         ;
 }
 
+void cancel()
+{
+    long unsigned int pnr;
+    printf("Enter PNR number of ticket to be cancelled: ");
+    scanf("%lu", &pnr);
+    while (fgetc(stdin) != '\n')
+        ;
+    for (int i = 0; i < ticketCount; i++)
+    {
+        if (tickets[i].pnr == pnr)
+        {
+            for (int j = 0; j < trainCount; j++)
+            {
+                if (!strcmp(trains[j].number, tickets[i].number))
+                {
+                    trains[j].seatsLeft++;
+                    for (int k = i; k < ticketCount - 1; k++)
+                    {
+                        tickets[k] = tickets[k + 1];
+                    }
+                    ticketCount--;
+                    printf("\nYour ticket has been cancelled!\n");
+                    printf("You have been refunded Rs.%.2f.", ((float)trains[j].cost) / 2);
+                    saveData();
+                    loadData();
+                    break;
+                }
+            }
+            break;
+        }
+        else if (i == ticketCount - 1)
+        {
+            printf("\n\nNo ticket has entered PNR number!");
+        }
+    }
+    printf("\n\nPress ENTER to continue...");
+    while (fgetc(stdin) != '\n')
+        ;
+}
+
 void loadData()
 {
+    trainCount = 0;
+    ticketCount = 0;
     FILE *trainPtr = fopen("trains.txt", "r");
     char c = fgetc(trainPtr);
     while (c != EOF)

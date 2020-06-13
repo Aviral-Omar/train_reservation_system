@@ -1,4 +1,4 @@
-02392,Delhi,Rajgir,330,1000
+2392,Delhi,Rajgir,330,1000
 02394,Delhi,Rajendra Nagar,310,1000
 02418,Delhi,Prayagraj,355,1000
 02420,Delhi,Lucknow,180,1000
