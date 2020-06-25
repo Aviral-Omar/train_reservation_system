@@ -52,12 +52,21 @@ int main()
 void welcome()
 {
     char choice;
-    printf("\tWelcome to Shramik Sahyog Kendra\n\n");
-    printf("\tHow can we help you today?\n\n");
+    printf("===============================================================================\n");
+    printf("\t\t\t\tWELCOME\n");
+    printf("\t\t\t\t  TO\n");
+    printf("\t\t\t\tSHRAMIK\n");
+    printf("\t\t\t\tSAHYOG\n");
+    printf("\t\t\t\tKENDRA\n");
+    printf("===============================================================================\n");
+    printf("How can we help you today?\n");
+    printf("-------------------------------------------------------------------------------\n");
     printf("1. Enquiry\n");
     printf("2. Booking\n");
     printf("3. Cancellation\n");
-    printf("0. Exit\n\n");
+    printf("0. Exit\n");
+    printf("-------------------------------------------------------------------------------\n");
+    printf("*******************************************************************************\n");
     printf("Choose your desired operation: ");
     choice = fgetc(stdin);
     // This clears the input buffer and discards all characters till end of line.
@@ -122,7 +131,7 @@ void enquiry()
         printf("\n\nNo trains are available for given source!");
     }
     // This waits for the user to enter a newline character i.e. press ENTER.
-    printf("\n\nPress ENTER to continue...");
+    printf("\n\nPress ENTER to return to main menu...");
     while (fgetc(stdin) != '\n')
         ;
 }
@@ -194,7 +203,7 @@ void booking()
     {
         printf("\n\nNo trains are available for given source!");
     }
-    printf("\n\nPress ENTER to continue...");
+    printf("\n\nPress ENTER to return to main menu...");
     while (fgetc(stdin) != '\n')
         ;
 }
@@ -259,7 +268,7 @@ void cancel()
             printf("\n\nNo ticket has entered PNR number!");
         }
     }
-    printf("\n\nPress ENTER to continue...");
+    printf("\n\nPress ENTER to return to main menu...");
     while (fgetc(stdin) != '\n')
         ;
 }
