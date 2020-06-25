@@ -106,6 +106,7 @@ void enquiry()
             // Checks all trains to see if destination matches.
             if (strcmp(dt, trains[i].destination) == 0)
             {
+                printf("\nTrain Number: %s \nCost: Rs.%u", trains[i].number, trains[i].cost);
                 printf("\n\nNumber of seats available: %hu", trains[i].seatsLeft);
                 break;
             }
@@ -163,9 +164,15 @@ void booking()
                     // Ticket stored in array.
                     tickets[ticketCount] = tc;
                     ticketCount++;
-                    printf("\nYou successfully booked a seat in train number %s.\n", tc.number);
-                    printf("Your PNR number is %lu.\n", tc.pnr);
-                    printf("You have been charged Rs.%u.", trains[i].cost);
+                    printf("\nYou successfully booked a seat in train number %s.", tc.number);
+                    printf("\n\nYour PNR number is %lu.", tc.pnr);
+                    printf("\n\nYou have been charged Rs.%u.", trains[i].cost);
+                    printf("\n\nDue To Covid-19, You Are Required To Seriously Follow The Guidelines Listed Below:");
+                    printf("\n\n1. It is Advisable to download Aarogya Setu App on your mobile phone, before commencing Rail Journey.");
+                    printf("\n2. Every Passenger is requested to arrive atleast two hours before the scheduled departure for thermal screening and other procedures required to prevent Covid-19.");
+                    printf("\n3. Use Face Mask, Maintain Social Distancing and Wash Hands Frequently.");
+                    printf("\n4. No Blanket and linen shall be provided in the train.");
+                    printf("\n5. If you wish to cancel your ticket, half of the ticket cost will be refunded.");
                     // This writes the data back into the files.
                     saveData();
                     break;
@@ -212,23 +219,36 @@ void cancel()
                 // Checks if train number matches.
                 if (!strcmp(trains[j].number, tickets[i].number))
                 {
-                    // Seats left in the train increased.
-                    trains[j].seatsLeft++;
-                    // To cancel the ticket, all further tickets in the array are shifted by 1.
-                    // Ticket count is decreased which also ensures that last ticket is not read twice.
-                    for (int k = i; k < ticketCount - 1; k++)
+                    printf("\nDeatils of the booked ticket:\n");
+                    printf("Train Number: %s\nCost: Rs.%u", trains[j].number, trains[j].cost);
+                    printf("\n\nAre you sure about proceeding with cancellation?(Enter y/n): ");
+                    char h = fgetc(stdin);
+                    while ((getchar()) != '\n')
+                        ;
+                    if (h == 'y' || h == 'Y')
                     {
-                        tickets[k] = tickets[k + 1];
+                        // Seats left in the train increased.
+                        trains[j].seatsLeft++;
+                        // To cancel the ticket, all further tickets in the array are shifted by 1.
+                        // Ticket count is decreased which also ensures that last ticket is not read twice.
+                        for (int k = i; k < ticketCount - 1; k++)
+                        {
+                            tickets[k] = tickets[k + 1];
+                        }
+                        ticketCount--;
+                        printf("\nYour ticket has been cancelled!\n");
+                        // Half the amount is refunded.
+                        printf("You have been refunded Rs.%.2f.", ((float)trains[j].cost) / 2);
+                        // The data is written to the files.
+                        saveData();
+                        // Data is also reloaded so that nextPNR can be determined.
+                        loadData();
+                        break;
                     }
-                    ticketCount--;
-                    printf("\nYour ticket has been cancelled!\n");
-                    // Half the amount is refunded.
-                    printf("You have been refunded Rs.%.2f.", ((float)trains[j].cost) / 2);
-                    // The data is written to the files.
-                    saveData();
-                    // Data is also reloaded so that nextPNR can be determined.
-                    loadData();
-                    break;
+                    else
+                    {
+                        printf("\nTicket has not been cancelled!");
+                    }
                 }
             }
             break;
@@ -356,7 +376,7 @@ void loadData()
     }
     else
     {
-        nextPNR = 0;
+        nextPNR = 1;
     }
     fclose(ticketPtr);
 }
