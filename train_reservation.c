@@ -199,7 +199,7 @@ void booking()
                         printf("\nTicket has not been booked.");
                         break;
                     }
-                                }
+                }
                 // Printed if no more seats left.
                 else
                 {
