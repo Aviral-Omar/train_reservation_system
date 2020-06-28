@@ -31,7 +31,7 @@ int trainCount;
 int ticketCount;
 int nextPNR;
 
-void welcome();
+int welcome();
 void enquiry();
 void booking();
 void cancel();
@@ -44,12 +44,15 @@ int main()
     system("clear");
     // Loading data at the beginning
     loadData();
-    welcome();
+    // This calls welcome until the user explicitly selects Exit in the Menu.
+    // It could also be done by recursively calling welcome but that would occupy increasingly occupy the stack.
+    while (welcome())
+        ;
     system("clear");
     return 0;
 }
 
-void welcome()
+int welcome()
 {
     char choice;
     printf("===============================================================================\n");
@@ -74,7 +77,7 @@ void welcome()
         ;
     if (choice == '0')
     {
-        return;
+        return 0;
     }
     else if (choice == '1')
     {
@@ -92,8 +95,7 @@ void welcome()
         cancel();
     }
     system("clear");
-    // By recursively calling welcome, the program does not end until the user explicitly selects Exit.
-    welcome();
+    return 1;
 }
 
 void enquiry()
@@ -107,7 +109,7 @@ void enquiry()
     if (strcmp(sr, "Delhi") == 0)
     {
         char dt[30];
-        printf("Enter Destination: ");
+        printf("\nEnter Destination: ");
         fgets(dt, 30, stdin);
         dt[strlen(dt) - 1] = '\0';
         for (int i = 0; i < trainCount; i++)
@@ -115,7 +117,7 @@ void enquiry()
             // Checks all trains to see if destination matches.
             if (strcmp(dt, trains[i].destination) == 0)
             {
-                printf("\nTrain Number: %s \nCost: Rs.%u", trains[i].number, trains[i].cost);
+                printf("\nTrain Number: %s\nCost: Rs.%u", trains[i].number, trains[i].cost);
                 printf("\n\nNumber of seats available: %hu", trains[i].seatsLeft);
                 break;
             }
@@ -161,35 +163,49 @@ void booking()
                 // This checks if desired train has any seats available.
                 if (trains[i].seatsLeft > 0)
                 {
-                    // Available seats decreased.
-                    trains[i].seatsLeft--;
-                    TICKET tc;
-                    // PNR assigned and nextPNR increased by 1.
-                    tc.pnr = nextPNR;
-                    nextPNR++;
-                    // Name and train number assigned.
-                    strcpy(tc.name, name);
-                    strcpy(tc.number, trains[i].number);
-                    // Ticket stored in array.
-                    tickets[ticketCount] = tc;
-                    ticketCount++;
-                    printf("\nYou successfully booked a seat in train number %s.", tc.number);
-                    printf("\n\nYour PNR number is %lu.", tc.pnr);
-                    printf("\n\nYou have been charged Rs.%u.", trains[i].cost);
-                    printf("\n\nDue To Covid-19, You Are Required To Seriously Follow The Guidelines Listed Below:");
-                    printf("\n\n1. It is Advisable to download Aarogya Setu App on your mobile phone, before commencing Rail Journey.");
-                    printf("\n2. Every Passenger is requested to arrive atleast two hours before the scheduled departure for thermal screening and other procedures required to prevent Covid-19.");
-                    printf("\n3. Use Face Mask, Maintain Social Distancing and Wash Hands Frequently.");
-                    printf("\n4. No Blanket and linen shall be provided in the train.");
-                    printf("\n5. If you wish to cancel your ticket, half of the ticket cost will be refunded.");
-                    // This writes the data back into the files.
-                    saveData();
-                    break;
+                    printf("\n\nAre you sure about proceeding with booking?(Enter y/n): ");
+                    char h = fgetc(stdin);
+                    while ((getchar()) != '\n')
+                        ;
+                    if (h == 'y' || h == 'Y')
+                    {
+                        // Available seats decreased.
+                        trains[i].seatsLeft--;
+                        TICKET tc;
+                        // PNR assigned and nextPNR increased by 1.
+                        tc.pnr = nextPNR;
+                        nextPNR++;
+                        // Name and train number assigned.
+                        strcpy(tc.name, name);
+                        strcpy(tc.number, trains[i].number);
+                        // Ticket stored in array.
+                        tickets[ticketCount] = tc;
+                        ticketCount++;
+                        printf("\nYou have successfully booked a seat in train number %s.", tc.number);
+                        printf("\n\nYour PNR number is %lu.", tc.pnr);
+                        printf("\n\nYou have been charged Rs.%u.", trains[i].cost);
+                        printf("\n\nDue To Covid-19, You Are Requested To Seriously Follow The Guidelines Listed Below:");
+                        printf("\n\n1. It is Advisable to download Aarogya Setu App on your mobile phone, before commencing Rail Journey.");
+                        printf("\n2. Every Passenger is requested to arrive atleast two hours before the scheduled departure for thermal screening and other procedures required to prevent Covid-19.");
+                        printf("\n3. Use Face Mask, Maintain Social Distancing and Wash Hands Frequently.");
+                        printf("\n4. No Blanket and linen shall be provided in the train.");
+                        printf("\n5. If you wish to cancel your ticket, half of the ticket cost will be refunded.");
+                        // This writes the data back into the files.
+                        saveData();
+                        break;
+                    }
+                    else
+                    {
+                        printf("\nTicket has not been booked.");
+                        break;
+                    }
+                    
                 }
                 // Printed if no more seats left.
                 else
                 {
                     printf("\n\nNo seats are left in this train!");
+                    break;
                 }
             }
             // Printed if no destination matches till the last iteration.
@@ -257,6 +273,7 @@ void cancel()
                     else
                     {
                         printf("\nTicket has not been cancelled!");
+                        break;
                     }
                 }
             }
