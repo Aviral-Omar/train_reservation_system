@@ -56,11 +56,11 @@ int welcome()
 {
     char choice;
     printf("===============================================================================\n");
-    printf("\t\t\t\tWELCOME\n");
-    printf("\t\t\t\t  TO\n");
-    printf("\t\t\t\tSHRAMIK\n");
-    printf("\t\t\t\tSAHYOG\n");
-    printf("\t\t\t\tKENDRA\n");
+    printf("\t\t\t\t     WELCOME\n");
+    printf("\t\t\t\t       TO\n");
+    printf("\t\tSHRAMIK\n");
+    printf("\t\t\t\t     SAHYOG\n");
+    printf("\t\t\t\t\t\t\t  KENDRA\n");
     printf("===============================================================================\n");
     printf("How can we help you today?\n");
     printf("-------------------------------------------------------------------------------\n");
@@ -199,8 +199,7 @@ void booking()
                         printf("\nTicket has not been booked.");
                         break;
                     }
-                    
-                }
+                                }
                 // Printed if no more seats left.
                 else
                 {
