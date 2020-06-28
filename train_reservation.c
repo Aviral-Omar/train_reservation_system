@@ -244,7 +244,7 @@ void cancel()
                 if (!strcmp(trains[j].number, tickets[i].number))
                 {
                     printf("\nDeatils of the booked ticket:\n");
-                    printf("Train Number: %s\nCost: Rs.%u", trains[j].number, trains[j].cost);
+                    printf("Name: %s\nTrain Number: %s\nCost: Rs.%u", tickets[i].name, trains[j].number, trains[j].cost);
                     printf("\n\nAre you sure about proceeding with cancellation?(Enter y/n): ");
                     char h = fgetc(stdin);
                     while ((getchar()) != '\n')
